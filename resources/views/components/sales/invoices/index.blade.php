@@ -5,10 +5,16 @@
 @section('page_title','Invoices')
 
 @section('primary_action')
-    <a href="{{ route('sales.invoices.create') }}"
-       class="inline-flex items-center px-4 py-2 text-sm rounded-xl bg-[#465FFF] text-white hover:bg-slate-800">
-        + New Invoice
-    </a>
+    <div class="flex items-center gap-2">
+        <a href="{{ route('sales.invoices.export.pdf') }}"
+           class="inline-flex items-center px-4 py-2 text-sm rounded-xl border border-slate-200 bg-white hover:bg-slate-50">
+            Export PDF
+        </a>
+        <a href="{{ route('sales.invoices.create') }}"
+           class="inline-flex items-center px-4 py-2 text-sm rounded-xl bg-[#465FFF] text-white hover:bg-slate-800">
+            + New Invoice
+        </a>
+    </div>
 @endsection
 
 @section('content')

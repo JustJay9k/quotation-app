@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Sales;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class InvoiceController
 {
     /**
-     * Show list of invoices
+     * Sample invoice rows (UI-only data for now).
      */
-    public function index(Request $request)
+    private function invoiceRows(): \Illuminate\Support\Collection
     {
-        $rows = collect([
+        return collect([
             [
                 'date' => '2026-01-30',
                 'number' => 'INV-00105',
@@ -29,8 +30,33 @@ class InvoiceController
                 'due' => '2026-01-25',
             ],
         ]);
+    }
+
+    /**
+     * Show list of invoices
+     */
+    public function index(Request $request)
+    {
+        $rows = $this->invoiceRows();
 
         return view('components.sales.invoices.index', compact('rows'));
+    }
+
+    /**
+     * Export currently listed invoices to PDF.
+     */
+    public function exportPdf(Request $request)
+    {
+        $rows = $this->invoiceRows();
+
+        $pdf = Pdf::loadView('components.sales.invoices.pdf', [
+            'rows' => $rows,
+            'generatedAt' => now(),
+        ])->setPaper('a4', 'portrait');
+
+        $filename = 'invoices-' . now()->format('Ymd-His') . '.pdf';
+
+        return $pdf->download($filename);
     }
 
     /**

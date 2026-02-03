@@ -19,6 +19,7 @@ Route::prefix('sales')->name('sales.')->group(function () {
     Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
     Route::get('invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
     Route::post('invoices', [InvoiceController::class, 'store'])->name('invoices.store');
+    Route::get('invoices/export/pdf', [InvoiceController::class, 'exportPdf'])->name('invoices.export.pdf');
     
     Route::get('payments-received', [PaymentsReceivedController::class, 'index'])->name('payments.index');
     Route::get('sales-orders', [SalesOrderController::class, 'index'])->name('orders.index');
