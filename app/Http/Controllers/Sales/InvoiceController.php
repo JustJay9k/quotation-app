@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 class InvoiceController
 {
+    /**
+     * Show list of invoices
+     */
     public function index(Request $request)
     {
         $rows = collect([
@@ -28,5 +31,70 @@ class InvoiceController
         ]);
 
         return view('components.sales.invoices.index', compact('rows'));
+    }
+
+    /**
+     * Show invoice creation form
+     */
+    public function create(Request $request)
+    {
+        // Sample customers for dropdown
+        $customers = ['Kumudzi Centre', 'Nyasa Tech', 'ABC Company', 'XYZ Solutions'];
+
+        // Sample items for quick pick
+        $items = [
+            ['name' => 'Professional Services', 'rate' => 0],
+            ['name' => 'Consulting', 'rate' => 0],
+            ['name' => 'Development', 'rate' => 0],
+        ];
+
+        return view('components.sales.invoices.create', compact('customers', 'items'));
+    }
+
+    /**
+     * Store invoice
+     */
+    public function store(Request $request)
+    {
+        // For now, just validate and redirect back
+        $validated = $request->validate([
+            'customer_name' => 'required|string|max:255',
+            'invoice_number' => 'required|string|max:255',
+            'invoice_date' => 'required|date',
+            'due_date' => 'required|date|after_or_equal:invoice_date',
+            'currency' => 'required|string|in:MWK,USD,ZAR,EUR,GBP',
+            'vat_rate' => 'required|numeric|min:0|max:100',
+            'items' => 'required|array|min:1',
+            'items.*.name' => 'required|string|max:255',
+            'items.*.qty' => 'required|numeric|min:0.01',
+            'items.*.rate' => 'required|numeric|min:0',
+        ]);
+
+        return redirect()
+            ->route('sales.invoices.index')
+            ->with('success', 'Invoice created successfully!');
+    }
+
+    /**
+     * Download invoice as PDF
+     */
+    public function downloadPdf($id)
+    {
+        // For now, just redirect back
+        return redirect()
+            ->route('sales.invoices.index')
+            ->with('info', 'PDF download coming soon');
+    }
+
+    /**
+     * Send invoice via email
+     */
+    public function send(Request $request)
+    {
+        // For now, just return success
+        return response()->json([
+            'success' => true,
+            'message' => 'Invoice sent successfully (frontend only)',
+        ]);
     }
 }
